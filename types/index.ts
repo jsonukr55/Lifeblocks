@@ -55,8 +55,9 @@ export interface FeedbackMessage {
 export interface CalcEntry {
   id: string;
   timestamp: number;
-  rowValue: number;    // sum of all mini-block values in the row
-  delta: number;       // positive = earned, negative = lost
+  rowValue: number;    // sum of all mini-block values in the row (amount invested)
+  returnValue: number; // totalValue * multiplier (capital returned)
+  delta: number;       // returnValue - rowValue (net profit/loss)
   reason: string;      // e.g. "FD bonus · Insured protection"
   isGood: boolean;
   blocksInRow: BlockType[]; // unique types in that row
@@ -80,7 +81,8 @@ export interface GameState {
 export interface RowClearResult {
   rowIndex: number;
   totalValue: number;
-  delta: number; // positive = reward, negative = penalty
+  returnValue: number; // totalValue * multiplier (capital returned to player)
+  delta: number;       // returnValue - totalValue (net profit/loss)
   reason: string;
   isGood: boolean;
 }

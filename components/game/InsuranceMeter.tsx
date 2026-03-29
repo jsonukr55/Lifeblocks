@@ -8,11 +8,14 @@ export default function InsuranceMeter() {
   const insuranceBalance = useGameStore((s) => s.insuranceBalance);
   const initialInsurance = useGameStore((s) => s.initialInsurance);
 
+  const isInDebt = insuranceBalance < 0;
   const pct = Math.max(0, Math.min(100, (insuranceBalance / initialInsurance) * 100));
-  const isLow = pct < 25;
-  const isCritical = pct < 10;
+  const isLow = !isInDebt && pct < 25;
+  const isCritical = !isInDebt && pct < 10;
 
-  const barColor = isCritical
+  const barColor = isInDebt
+    ? "from-red-700 to-red-500"
+    : isCritical
     ? "from-red-600 to-red-400"
     : isLow
     ? "from-orange-500 to-amber-400"
@@ -39,13 +42,13 @@ export default function InsuranceMeter() {
         </div>
         <motion.span
           key={insuranceBalance}
-          initial={{ scale: 1.15, color: isCritical ? "#f87171" : "#34d399" }}
-          animate={{ scale: 1, color: isCritical ? "#f87171" : "#94a3b8" }}
+          initial={{ scale: 1.15, color: isInDebt ? "#f87171" : isCritical ? "#f87171" : "#34d399" }}
+          animate={{ scale: 1, color: isInDebt ? "#f87171" : isCritical ? "#f87171" : "#94a3b8" }}
           className={`text-xs font-bold tabular-nums ${
-            isCritical ? "text-red-400" : "text-slate-400"
+            isInDebt || isCritical ? "text-red-400" : "text-slate-400"
           }`}
         >
-          ₹{insuranceBalance.toLocaleString("en-IN")}
+          {isInDebt ? "-" : ""}₹{Math.abs(insuranceBalance).toLocaleString("en-IN")}
         </motion.span>
       </div>
 
@@ -68,16 +71,16 @@ export default function InsuranceMeter() {
         )}
       </div>
 
-      {/* Percentage label */}
+      {/* Percentage / debt label */}
       <div className="flex justify-between text-[9px] text-slate-600">
         <span>0%</span>
-        <span
-          className={
-            isCritical ? "text-red-500 font-bold" : isLow ? "text-orange-500" : ""
-          }
-        >
-          {pct.toFixed(0)}%
-        </span>
+        {isInDebt ? (
+          <span className="text-red-500 font-bold animate-pulse">⚠️ DEBT</span>
+        ) : (
+          <span className={isCritical ? "text-red-500 font-bold" : isLow ? "text-orange-500" : ""}>
+            {pct.toFixed(0)}%
+          </span>
+        )}
         <span>100%</span>
       </div>
     </div>

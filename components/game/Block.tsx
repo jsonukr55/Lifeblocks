@@ -16,6 +16,8 @@ const MINI_SIZE = 26; // px per mini-block in tray
 
 export default function DraggableBlock({ block, trayIndex }: Props) {
   const rotateBlockInTray = useGameStore((s) => s.rotateBlockInTray);
+  const insuranceBalance = useGameStore((s) => s.insuranceBalance);
+  const canAfford = insuranceBalance >= block.totalCost;
 
   const [{ isDragging }, dragRef] = useDrag<
     DragItem,
@@ -86,20 +88,25 @@ export default function DraggableBlock({ block, trayIndex }: Props) {
 
       {/* Cost + risk badge */}
       <div className="flex items-center gap-1 mt-0.5">
-        <span className="text-[10px] font-semibold text-slate-300">
+        <span className={`text-[10px] font-semibold ${canAfford ? "text-slate-300" : "text-orange-400"}`}>
           ₹{block.totalCost >= 1000 ? `${(block.totalCost / 1000).toFixed(0)}k` : block.totalCost}
         </span>
-        <span
-          className={`text-[9px] px-1 rounded-full font-medium ${
-            block.riskLevel === "high"
-              ? "bg-red-500/20 text-red-400"
-              : block.riskLevel === "medium"
-              ? "bg-amber-500/20 text-amber-400"
-              : "bg-green-500/20 text-green-400"
-          }`}
-        >
-          {block.riskLevel}
-        </span>
+        {!canAfford && (
+          <span className="text-[9px] text-orange-400 font-bold">⚠️</span>
+        )}
+        {canAfford && (
+          <span
+            className={`text-[9px] px-1 rounded-full font-medium ${
+              block.riskLevel === "high"
+                ? "bg-red-500/20 text-red-400"
+                : block.riskLevel === "medium"
+                ? "bg-amber-500/20 text-amber-400"
+                : "bg-green-500/20 text-green-400"
+            }`}
+          >
+            {block.riskLevel}
+          </span>
+        )}
       </div>
     </motion.div>
   );

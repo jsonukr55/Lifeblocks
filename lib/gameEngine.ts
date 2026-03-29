@@ -144,13 +144,13 @@ export function evaluateRow(
   multiplier = Math.max(0.05, multiplier);
 
   const isGood = multiplier >= 1.0;
-  const delta = isGood
-    ? Math.round(totalValue * (multiplier - 1))
-    : -Math.round(totalValue * (1 - multiplier));
+  const returnValue = Math.round(totalValue * multiplier);
+  const delta = returnValue - totalValue;
 
   return {
     rowIndex,
     totalValue,
+    returnValue,
     delta,
     reason: reasons.length > 0 ? reasons.join(" · ") : "Row cleared",
     isGood,

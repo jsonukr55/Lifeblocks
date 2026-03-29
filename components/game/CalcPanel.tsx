@@ -49,6 +49,8 @@ export default function CalcPanel() {
   const totalSpent = Object.values(categoryBreakdown).reduce((a, b) => a + b, 0);
   const netChange = insuranceBalance - initialInsurance;
 
+  const isInDebt = insuranceBalance < 0;
+
   // Summary card — shared between mobile row and desktop column
   const SummaryCard = (
     <div className="bg-slate-900/80 rounded-xl border border-slate-700/80 p-2.5 backdrop-blur-sm flex-1 lg:flex-none">
@@ -60,17 +62,20 @@ export default function CalcPanel() {
       </div>
       <div className="flex lg:flex-col gap-3 lg:gap-1.5">
         <div>
-          <div className="text-[9px] text-slate-600 uppercase tracking-wider">Spent</div>
+          <div className="text-[9px] text-slate-600 uppercase tracking-wider">Capital</div>
+          <div className={`text-xs font-bold tabular-nums ${isInDebt ? "text-red-400" : "text-slate-300"}`}>
+            {isInDebt ? "-" : ""}{fmt(insuranceBalance)}
+          </div>
+          {isInDebt && (
+            <div className="text-[8px] text-orange-400 font-medium">IN DEBT</div>
+          )}
+        </div>
+        <div>
+          <div className="text-[9px] text-slate-600 uppercase tracking-wider">Invested</div>
           <div className="text-xs font-bold text-slate-300 tabular-nums">{fmt(totalSpent)}</div>
         </div>
         <div>
-          <div className="text-[9px] text-slate-600 uppercase tracking-wider">Net</div>
-          <div className={`text-xs font-bold tabular-nums ${netChange >= 0 ? "text-emerald-400" : "text-red-400"}`}>
-            {netChange >= 0 ? "+" : ""}{fmt(netChange)}
-          </div>
-        </div>
-        <div>
-          <div className="text-[9px] text-slate-600 uppercase tracking-wider">Score</div>
+          <div className="text-[9px] text-slate-600 uppercase tracking-wider">Returns</div>
           <div className="text-xs font-bold text-amber-400 tabular-nums">{fmt(score)}</div>
         </div>
       </div>
@@ -155,7 +160,7 @@ export default function CalcPanel() {
                   {entry.delta >= 0 ? "+" : ""}{fmt(entry.delta)}
                 </div>
                 <div className="text-[9px] text-slate-500 tabular-nums">
-                  Row: {fmt(entry.rowValue)}
+                  {fmt(entry.rowValue)} → {fmt(entry.returnValue)}
                 </div>
                 <div className="flex flex-wrap gap-0.5 mt-0.5">
                   {entry.blocksInRow.map((type) => (
