@@ -1,0 +1,40 @@
+{
+  "name": "lifeblocks",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "^15.2.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "zustand": "^5.0.3",
+    "immer": "^10.1.1",
+    "react-dnd": "^16.0.1",
+    "react-dnd-html5-backend": "^16.0.1",
+    "react-dnd-touch-backend": "^16.0.1",
+    "dnd-multi-backend": "^8.0.4",
+    "framer-motion": "^11.15.0",
+    "uuid": "^11.0.5",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.6.0",
+    "lucide-react": "^0.469.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "@types/node": "^22.13.5",
+    "@types/uuid": "^10.0.0",
+    "tailwindcss": "^3.4.17",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.5.1",
+    "eslint": "^9.20.0",
+    "eslint-config-next": "^15.2.4",
+    "@eslint/eslintrc": "^3.2.0"
+  }
+}
